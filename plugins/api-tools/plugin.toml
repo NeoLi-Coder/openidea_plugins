@@ -1,0 +1,56 @@
+id = "neo.api-tools"
+name = "Neo API 工具"
+version = "0.1.14"
+icon = "icons/lightning.svg"
+description = "浏览项目接口、构造请求、导入导出 cURL，并通过已授权的 curl 发送请求。"
+authors = ["Neo"]
+categories = ["tools"]
+engines.openidea = "^1.14"
+wasm = "dist/plugin.wasm"
+activation = ["on-startup-finished", "on-view:workspace", "on-command:*"]
+
+[capabilities]
+required = ["project.read", "storage", "clipboard"]
+optional = ["process:curl"]
+
+# OpenIDEA 从声明派生 java.agent 授权，并在启动 JVM 前校验已批准的 JAR。
+[[contributes.javaAgents]]
+path = "dist/neo-scheduled-agent.jar"
+
+[[contributes.views]]
+id = "workspace"
+title = "API 工作台"
+location = "right"
+icon = "icons/lightning.svg"
+
+[[contributes.providers]]
+kinds = ["gutter-actions"]
+languages = ["java", "kotlin"]
+
+[[contributes.markerIcons]]
+id = "endpoint"
+icon = "icons/lightning.svg"
+
+[[contributes.commands]]
+id = "open-endpoint"
+title = "在 API 工作台打开接口"
+category = "Neo API 工具"
+
+[[contributes.commands]]
+id = "run-scheduled"
+title = "立即执行当前定时任务"
+category = "Neo API 工具"
+
+[[contributes.commands]]
+id = "browse"
+title = "搜索项目 API"
+category = "Neo API 工具"
+when = "projectOpen"
+
+[[contributes.keymaps]]
+command = "browse"
+key = "Ctrl+Alt+Slash"
+
+[[contributes.menus]]
+menu = "tools"
+command = "browse"

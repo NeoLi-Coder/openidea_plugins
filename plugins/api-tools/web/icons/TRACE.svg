@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>TRACE</title>
+    <defs>
+        <path d="M3,0 L13,0 C14.6568542,-3.04359188e-16 16,1.34314575 16,3 L16,13 C16,14.6568542 14.6568542,16 13,16 L10.830049,16 L10.830049,16 L3,16 C1.34314575,16 2.02906125e-16,14.6568542 0,13 L0,3 C-2.02906125e-16,1.34314575 1.34314575,3.04359188e-16 3,0 Z" id="path-1"></path>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="TRACE">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="蒙版" fill="#4727B2" xlink:href="#path-1"></use>
+            <text id="T" mask="url(#mask-2)" font-family="STYuanti-SC-Bold, Yuanti SC" font-size="16" font-weight="bold" fill="#FFFFFF">
+                <tspan x="3.7" y="14">T</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
