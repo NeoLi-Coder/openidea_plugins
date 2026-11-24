@@ -20,13 +20,15 @@
 
 ## 发布 Release
 
-先更新对应插件的 `plugin.toml`、`Cargo.toml`、根目录 `Cargo.lock` 及使用说明中的版本，提交后推送版本标签。两个插件分别使用 `api-tools-v版本号` 和 `editor-tools-v版本号`：
+一个 GitHub Release 同时提供两个插件的 `.oiplugin` 安装包。两个插件保留各自的版本号，仓库统一使用 `v` 开头的发版标签，例如 `v2026.11.24`。
+
+有功能变更时，更新对应插件的 `plugin.toml`、`Cargo.toml`、根目录 `Cargo.lock` 及使用说明中的版本；未变更的插件保留版本。提交后推送仓库标签：
 
 ```powershell
-git tag -a api-tools-v0.1.18 -m "Neo API 工具 0.1.18"
-git push origin main api-tools-v0.1.18
+git tag -a v2026.11.24 -m "OpenIDEA 插件 v2026.11.24"
+git push origin main v2026.11.24
 ```
 
-[publish 工作流](https://github.com/NeoLi-Coder/openidea_plugins/actions/workflows/publish.yml) 会检出该标签，运行 `build.ps1` 的既有测试与构建，并将对应的 `.oiplugin` 上传到 GitHub Release。工作流使用 GitHub 提供的 `GITHUB_TOKEN` 和 `contents: write` 权限，无需配置个人令牌。API 工具的 Release 说明会提示首次允许 `ide.commands`。
+[publish 工作流](https://github.com/NeoLi-Coder/openidea_plugins/actions/workflows/publish.yml) 会检出该标签，运行 `build.ps1 -Plugin all`，完成两个插件的既有测试与构建，再将两个安装包上传到同一个 GitHub Release。安装包名称和版本读取各插件清单。工作流使用 GitHub 提供的 `GITHUB_TOKEN` 和 `contents: write` 权限，无需配置个人令牌。Release 说明会列出两个插件的版本，并提示 API 工具首次使用快速定位时允许 `ide.commands`。
 
-标签已存在时，在 Actions → publish → Run workflow 中选择 `main`，填写已有标签（例如 `api-tools-v0.1.18`）即可补发；构建源码仍取自该标签。首次为已有标签补上工作流时，也使用此入口。
+标签已存在时，在 Actions → publish → Run workflow 中选择 `main`，填写已有仓库标签（例如 `v2026.11.24`）即可补发两个安装包；构建源码仍取自该标签。
