@@ -1,0 +1,23 @@
+{
+  "properties": {
+    "copyAbsolutePathEnabled": {
+      "type": "boolean",
+      "title": "启用复制绝对路径",
+      "group": "复制路径与行号",
+      "default": false
+    },
+    "copyPathEnabled": {
+      "type": "boolean",
+      "title": "启用复制相对路径",
+      "group": "复制路径与行号",
+      "default": false
+    },
+    "externalEditorEnabled": {
+      "type": "boolean",
+      "title": "启用外部编辑器",
+      "group": "外部编辑器",
+      "description": "编辑器路径：在本插件权限的 process:code 中选择并授权 VS Code、VS Code Insiders 或 Cursor 的启动程序。",
+      "default": false
+    }
+  }
+}

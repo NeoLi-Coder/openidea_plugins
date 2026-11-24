@@ -1,0 +1,89 @@
+id = "neo.editor-tools"
+name = "Neo 编辑器工具"
+version = "0.1.2"
+description = "复制路径与行号，在 VS Code 或兼容编辑器中打开文件和项目；两项功能独立开关。"
+authors = ["Neo"]
+license = "Apache-2.0"
+categories = ["tools"]
+engines.openidea = "^1.14"
+wasm = "dist/plugin.wasm"
+
+[capabilities]
+required = ["editor.read", "project.read", "clipboard"]
+optional = ["process:code"]
+
+[contributes.settings]
+title = "Neo 编辑器工具"
+schema = "settings.schema.json"
+
+[[contributes.commands]]
+id = "copy-relative"
+title = "复制相对路径与行号"
+category = "Neo 编辑器工具"
+when = "textEditorActive"
+
+[[contributes.commands]]
+id = "copy-absolute"
+title = "复制绝对路径与行号"
+category = "Neo 编辑器工具"
+when = "textEditorActive"
+
+[[contributes.commands]]
+id = "open-file"
+title = "在外部编辑器中打开当前文件"
+category = "Neo 编辑器工具"
+when = "textEditorActive"
+icon = "run"
+
+[[contributes.commands]]
+id = "open-project"
+title = "在外部编辑器中打开当前项目"
+category = "Neo 编辑器工具"
+when = "projectOpen"
+icon = "run"
+
+[[contributes.menus]]
+menu = "editor.context"
+command = "copy-relative"
+
+[[contributes.menus]]
+menu = "editor.context"
+command = "copy-absolute"
+
+[[contributes.menus]]
+menu = "editor.context"
+command = "open-file"
+
+[[contributes.menus]]
+menu = "editor.context"
+command = "open-project"
+
+[[contributes.menus]]
+menu = "projectView.context"
+command = "open-project"
+submenu = "Neo 编辑器工具"
+
+[[contributes.menus]]
+menu = "editor.title"
+command = "open-file"
+
+[[contributes.menus]]
+menu = "tools"
+command = "open-project"
+
+[[contributes.menus]]
+menu = "mainToolbar"
+command = "open-project"
+
+[[contributes.keymaps]]
+command = "copy-relative"
+key = "Ctrl+Shift+C"
+mac = "Meta+Shift+C"
+
+[[contributes.keymaps]]
+command = "open-file"
+key = "Ctrl+Alt+V"
+
+[[contributes.keymaps]]
+command = "open-project"
+key = "Ctrl+Alt+Shift+V"
