@@ -20,6 +20,11 @@ impl Plugin for ApiTools {
         uploads::recover(&host::fs::plugin_dir()?)
     }
     fn run_command(&mut self,id:&str,ctx:&Invocation,arg:Option<&str>)->Result<Option<String>,Error>{
+        if id=="locate-endpoint" {
+            ctx.project().ok_or("请在项目窗口中使用 API 工具。")?;
+            // 由宿主显示全窗口搜索弹框并查询其 Spring 接口索引，不打开工作台 iframe。
+            return host::execute_command("navigate.searchEverywhere",None)
+        }
         if id=="open-endpoint"||id=="run-scheduled" {
             let target:Value=serde_json::from_str(arg.ok_or("请点击接口声明行左侧的闪电。")?).map_err(|e|Error::Invalid(e.to_string()))?;
             let root=ctx.project().ok_or("请在项目窗口中使用 API 工具。")?.root()?;

@@ -1,6 +1,6 @@
 id = "neo.api-tools"
 name = "Neo API 工具"
-version = "0.1.14"
+version = "0.1.18"
 icon = "icons/lightning.svg"
 description = "浏览项目接口、构造请求、导入导出 cURL，并通过已授权的 curl 发送请求。"
 authors = ["Neo"]
@@ -11,7 +11,7 @@ activation = ["on-startup-finished", "on-view:workspace", "on-command:*"]
 
 [capabilities]
 required = ["project.read", "storage", "clipboard"]
-optional = ["process:curl"]
+optional = ["process:curl", "ide.commands"]
 
 # OpenIDEA 从声明派生 java.agent 授权，并在启动 JVM 前校验已批准的 JAR。
 [[contributes.javaAgents]]
@@ -47,9 +47,19 @@ title = "搜索项目 API"
 category = "Neo API 工具"
 when = "projectOpen"
 
+[[contributes.commands]]
+id = "locate-endpoint"
+title = "快速定位接口源码"
+category = "Neo API 工具"
+when = "projectOpen"
+
 [[contributes.keymaps]]
-command = "browse"
-key = "Ctrl+Alt+Slash"
+command = "locate-endpoint"
+key = "Ctrl+Alt+F11"
+
+[[contributes.menus]]
+menu = "tools"
+command = "locate-endpoint"
 
 [[contributes.menus]]
 menu = "tools"
