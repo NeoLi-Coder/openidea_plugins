@@ -1,4 +1,6 @@
 /.tools/
 /target/
+/plugins/api-tools/scheduled-runtime/target/
 /release/
-/dist/
+/plugins/*/dist/
+/plugins/api-tools/web/generated/

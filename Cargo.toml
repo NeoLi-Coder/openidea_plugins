@@ -1,17 +1,9 @@
-[package]
-name = "neo-editor-tools"
-version = "0.1.2"
-edition = "2024"
-publish = false
-license = "Apache-2.0"
-
 [workspace]
+members = ["plugins/editor-tools", "plugins/api-tools"]
 exclude = ["vendor/openidea-plugin"]
+resolver = "3"
 
-[lib]
-crate-type = ["cdylib", "rlib"]
-
-[dependencies]
+[workspace.dependencies]
 openidea-plugin = { path = "vendor/openidea-plugin" }
 
 [profile.release]
