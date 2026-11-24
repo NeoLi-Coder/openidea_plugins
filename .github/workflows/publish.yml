@@ -1,0 +1,101 @@
+name: publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '已有版本标签，例如 api-tools-v0.1.18'
+        required: true
+        type: string
+  push:
+    tags:
+      - 'api-tools-v*'
+      - 'editor-tools-v*'
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+
+    steps:
+      - name: Resolve plugin from tag
+        id: release
+        run: |
+          # 两个插件独立发版；手动运行也构建指定标签，而不是当前分支。
+          if ($env:RELEASE_TAG -notmatch '^(api-tools|editor-tools)-v(.+)$') {
+            throw '标签格式应为 api-tools-v版本号 或 editor-tools-v版本号'
+          }
+          "plugin=$($Matches[1])" >> $env:GITHUB_OUTPUT
+          "version=$($Matches[2])" >> $env:GITHUB_OUTPUT
+
+      - name: Checkout release tag
+        uses: actions/checkout@v7
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
+          persist-credentials: false
+
+      - name: Read package metadata
+        id: package
+        env:
+          PLUGIN: ${{ steps.release.outputs.plugin }}
+          TAG_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          $manifest = Get-Content "plugins/$env:PLUGIN/plugin.toml" -Raw
+          $version = [regex]::Match($manifest, '(?m)^version = "([^"]+)"').Groups[1].Value
+          $name = [regex]::Match($manifest, '(?m)^name = "([^"]+)"').Groups[1].Value
+          # Release 标签和安装包内版本必须一致，避免把其他版本挂到已验收标签下。
+          if ($version -ne $env:TAG_VERSION) {
+            throw "标签版本 $env:TAG_VERSION 与插件版本 $version 不一致"
+          }
+          "file=release/neo.$env:PLUGIN-$version.oiplugin" >> $env:GITHUB_OUTPUT
+          "title=$name $version" >> $env:GITHUB_OUTPUT
+          $notes = @(
+            '下载下方 .oiplugin 文件，在 OpenIDEA 中选择 Install Plugin from Package File… 安装。',
+            '',
+            "功能与权限说明：https://github.com/$env:GITHUB_REPOSITORY/tree/$env:RELEASE_TAG/plugins/$env:PLUGIN"
+          )
+          if ($env:PLUGIN -eq 'api-tools') {
+            $notes += @('', '使用快速定位接口入口前，请在插件权限中允许 ide.commands；默认快捷键为 Ctrl+Alt+F11，也可在 IDE 中自定义。')
+          }
+          $notes | Set-Content "$env:RUNNER_TEMP/release-notes.md" -Encoding utf8
+
+      - name: Set up Node.js
+        if: steps.release.outputs.plugin == 'api-tools'
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22.23.2'
+
+      - name: Set up Java
+        if: steps.release.outputs.plugin == 'api-tools'
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Rust
+        run: |
+          rustup toolchain install 1.100.0 --profile minimal --target wasm32-wasip2
+          if ($LASTEXITCODE) { throw 'Rust 工具链安装失败' }
+          rustup default 1.100.0
+          if ($LASTEXITCODE) { throw 'Rust 工具链选择失败' }
+
+      - name: Build and run existing tests
+        env:
+          PLUGIN: ${{ steps.release.outputs.plugin }}
+        run: ./build.ps1 -Plugin $env:PLUGIN
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: ${{ steps.package.outputs.title }}
+          body_path: ${{ runner.temp }}/release-notes.md
+          generate_release_notes: true
+          files: ${{ steps.package.outputs.file }}
+          fail_on_unmatched_files: true
