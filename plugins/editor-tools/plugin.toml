@@ -21,26 +21,28 @@ id = "copy-relative"
 title = "复制相对路径与行号"
 category = "Neo 编辑器工具"
 when = "textEditorActive"
+icon = "icons/copy-relative.svg"
 
 [[contributes.commands]]
 id = "copy-absolute"
 title = "复制绝对路径与行号"
 category = "Neo 编辑器工具"
 when = "textEditorActive"
+icon = "icons/copy-absolute.svg"
 
 [[contributes.commands]]
 id = "open-file"
 title = "在外部编辑器中打开当前文件"
 category = "Neo 编辑器工具"
 when = "textEditorActive"
-icon = "run"
+icon = "icons/open-file.svg"
 
 [[contributes.commands]]
 id = "open-project"
 title = "在外部编辑器中打开当前项目"
 category = "Neo 编辑器工具"
 when = "projectOpen"
-icon = "run"
+icon = "icons/open-project.svg"
 
 [[contributes.menus]]
 menu = "editor.context"
