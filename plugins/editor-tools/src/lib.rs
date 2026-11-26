@@ -3,12 +3,21 @@
 mod features;
 mod settings;
 
-use openidea_plugin::{Error, Invocation, Plugin, register_plugin};
+use openidea_plugin::{Error, Event, Invocation, LogLevel, Plugin, host, register_plugin};
 
 #[derive(Default)]
 pub struct EditorTools;
 
 impl Plugin for EditorTools {
+    fn handle_events(&mut self, events: &[Event], _ctx: &Invocation) {
+        // 设置事件带有窗口作用域，避免项目级开关覆盖其他窗口的菜单状态。
+        if events.iter().any(|event| matches!(event, Event::Other { kind, .. } if kind == "settings-changed")) {
+            if let Err(error) = settings::sync_menu_context() {
+                host::log(LogLevel::Error, &format!("更新右键菜单显示状态失败：{error}"));
+            }
+        }
+    }
+
     fn run_command(
         &mut self,
         id: &str,

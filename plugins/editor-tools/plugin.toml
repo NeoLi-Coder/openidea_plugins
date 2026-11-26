@@ -1,15 +1,17 @@
 id = "neo.editor-tools"
 name = "Neo 编辑器工具"
-version = "0.1.2"
+version = "0.1.3"
 description = "复制路径与行号，在 VS Code 或兼容编辑器中打开文件和项目；两项功能独立开关。"
 authors = ["Neo"]
 license = "Apache-2.0"
 categories = ["tools"]
 engines.openidea = "^1.14"
 wasm = "dist/plugin.wasm"
+# 宿主在安装、启用、窗口初始化及有效设置变化时发送此事件。
+activation = ["on-event:settings-changed"]
 
 [capabilities]
-required = ["editor.read", "project.read", "clipboard"]
+required = ["editor.read", "project.read", "clipboard", "events"]
 optional = ["process:code"]
 
 [contributes.settings]
@@ -47,22 +49,27 @@ icon = "icons/open-project.svg"
 [[contributes.menus]]
 menu = "editor.context"
 command = "copy-relative"
+when = "plugin.neo.editor-tools.copyPathEnabled"
 
 [[contributes.menus]]
 menu = "editor.context"
 command = "copy-absolute"
+when = "plugin.neo.editor-tools.copyAbsolutePathEnabled"
 
 [[contributes.menus]]
 menu = "editor.context"
 command = "open-file"
+when = "plugin.neo.editor-tools.externalEditorEnabled"
 
 [[contributes.menus]]
 menu = "editor.context"
 command = "open-project"
+when = "plugin.neo.editor-tools.externalEditorEnabled"
 
 [[contributes.menus]]
 menu = "projectView.context"
 command = "open-project"
+when = "plugin.neo.editor-tools.externalEditorEnabled"
 submenu = "Neo 编辑器工具"
 
 [[contributes.menus]]
